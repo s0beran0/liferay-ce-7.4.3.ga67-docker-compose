@@ -1,0 +1,87 @@
+version: '3.7'
+
+services:
+
+  liferay:
+    build: ./image/
+    environment:
+      - LIFERAY_JVM_OPTS=-Xms7g -Xmx7g -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
+      - LIFERAY_MODULE_PERIOD_FRAMEWORK_PERIOD_PROPERTIES_PERIOD_OSGI_PERIOD_CONSOLE=0.0.0.0:11311
+      - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_lass_UPPERCASEN_ame=org.postgresql.Driver
+      - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL=jdbc:postgresql://postgres:5432/lportal
+      - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME=liferay
+      - LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD=passw0rd
+      - LIFERAY_UPGRADE_PERIOD_DATABASE_PERIOD_AUTO_PERIOD_RUN=true
+    ports:
+      - 8080:8080
+      - 8443:8443
+      - 9010:9010
+      - 8000:8000
+      - 11311:11311
+    volumes:
+      - './volumes/liferay/mnt:/mnt/liferay'
+      - './volumes/liferay/data:/opt/liferay/data'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      elsdesafio:
+        condition: service_healthy
+    networks:
+      - liferay
+
+  postgres:
+    image: 'postgres:10.21-alpine'
+    environment:
+      - POSTGRES_PASSWORD=passw0rd
+      - POSTGRES_USER=liferay
+      - POSTGRES_DB=lportal
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - './volumes/database/data:/var/lib/postgresql/data'
+    networks:
+      - liferay
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U liferay -d lportal"]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+
+  elsdesafio:
+    restart: always
+    image: elasticsearch:7.16.3
+    environment:
+      - 'ES_JAVA_OPTS=-Xms${ES_HEAP_SIZE:-2g} -Xmx${ES_HEAP_SIZE:-2g}'
+    ports:
+      - 9200:9200
+      - 9300:9300
+    init: true
+    command: >
+      sh -c "
+      /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch analysis-icu;
+      /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch analysis-kuromoji;
+      /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch analysis-smartcn;
+      /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch analysis-stempel;
+      /usr/local/bin/docker-entrypoint.sh;
+      "
+    volumes:
+      - ./elasticsearch/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
+      - ./elasticsearch/plugins:/usr/share/elasticsearch/plugins
+      - ./elasticsearch/logs:/var/log/elasticsearch
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - liferay
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+
+networks:
+  liferay:
+    driver: bridge
