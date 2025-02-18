@@ -30,11 +30,11 @@ cluster.name: cluster-docker
 #
 # Path to directory where to store the data (separate multiple locations by comma):
 #
-path.data: /usr/share/elasticsearch/data
+#path.data: /usr/share/elasticsearch/data
 #
 # Path to log files:
 #
-path.logs: /var/log/elasticsearch
+#path.logs: /var/log/elasticsearch
 #
 # ----------------------------------- Memory -----------------------------------
 #

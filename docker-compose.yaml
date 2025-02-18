@@ -40,13 +40,14 @@ services:
       - "5432:5432"
     volumes:
       - './volumes/database/data:/var/lib/postgresql/data'
+      - './volumes/database/dump:/dump/'
     networks:
       - liferay
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U liferay -d lportal"]
       interval: 10s
       retries: 5
-      start_period: 20s
+      start_period: 50s
 
   elsdesafio:
     restart: always
@@ -57,19 +58,10 @@ services:
       - 9200:9200
       - 9300:9300
     init: true
-    command: >
-      sh -c "
-      /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch analysis-icu;
-      /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch analysis-kuromoji;
-      /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch analysis-smartcn;
-      /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch analysis-stempel;
-      /usr/local/bin/docker-entrypoint.sh;
-      "
+    command: ["/bin/sh", "-c", "/usr/share/elasticsearch/install-plugins.sh"]
     volumes:
-      - ./elasticsearch/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - ./elasticsearch/data:/usr/share/elasticsearch/data
-      - ./elasticsearch/plugins:/usr/share/elasticsearch/plugins
-      - ./elasticsearch/logs:/var/log/elasticsearch
+      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elasticsearch/install-plugins.sh:/usr/share/elasticsearch/install-plugins.sh
     ulimits:
       memlock:
         soft: -1
@@ -80,7 +72,7 @@ services:
       test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
       interval: 10s
       retries: 5
-      start_period: 20s
+      start_period: 50s
 
 networks:
   liferay:
