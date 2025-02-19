@@ -18,9 +18,13 @@ cd liferay-ce-7.4.3.ga67-docker-compose/
 ```
 
 ### System Dependencies
+
+**Attention:** This repository is designed to run **only on Linux systems**. To ensure compatibility, **it cannot be run on Windows or macOS** without using virtual machines or containers specifically configured for those systems.
 The dependencies required to run the project are:
 - [Docker](https://docs.docker.com/engine/install/)
 - [Docker-compose](https://docs.docker.com/compose/install/standalone/)
+
+If you are using Windows or macOS, we suggest using a virtual machine to emulate a Linux environment.
 
 ### Starting the environment
 To start the environment, run the following command in the terminal:
