@@ -2,8 +2,8 @@
 
 set -e
 
-POSTGRES_CONTAINER_NAME="liferay-docker-compose_postgres_1"
-LIFERAY_CONTAINER_NAME="liferay-docker-compose_liferay_1"
+POSTGRES_CONTAINER_NAME="postgres-container"
+LIFERAY_CONTAINER_NAME="liferay-container"
 
 restore_database() {
   # Listing dump files in the /dump/ folder inside the container

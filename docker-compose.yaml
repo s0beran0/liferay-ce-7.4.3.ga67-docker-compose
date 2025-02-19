@@ -3,6 +3,7 @@ version: '3.7'
 services:
 
   liferay:
+    container_name: liferay-container
     build: ./image/
     environment:
       - LIFERAY_JVM_OPTS=-Xms7g -Xmx7g -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
@@ -31,6 +32,7 @@ services:
       - liferay
 
   postgres:
+    container_name: postgres-container
     image: 'postgres:10.21-alpine'
     environment:
       - POSTGRES_PASSWORD=passw0rd
@@ -51,6 +53,7 @@ services:
       start_period: 50s
 
   elsdesafio:
+    container_name: elsdesafio-container
     restart: always
     image: elasticsearch:7.16.3
     environment:

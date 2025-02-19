@@ -1,3 +1,1 @@
-volumes/database/data/*
-volumes/database/dump/*
-volumes/liferay/*
+volumes/*
