@@ -2,4 +2,5 @@ elasticsearch/data/*
 elasticsearch/logs/*
 elasticsearch/plugins/*
 volumes/database/data/*
+volumes/database/dump/*
 volumes/liferay/*
