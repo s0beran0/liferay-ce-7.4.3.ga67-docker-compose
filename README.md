@@ -59,12 +59,6 @@ This command creates a pgdump backup, generating a .dump file in the `volumes/da
 ./setup.sh create_dump
 ```
 
-#### Backup using pgdump (duplicate entry):
-This command creates a pgdump backup, generating a .dump file in the `volumes/database/dump/` folder.
-```bash
-./setup.sh create_dump
-```
-
 #### Backup as SQL:
 This command creates a .sql backup and saves it in `volumes/database/dump/`.
 ```bash
