@@ -19,8 +19,9 @@ services:
       - 8000:8000
       - 11311:11311
     volumes:
-      - './volumes/liferay/mnt:/mnt/liferay'
-      - './volumes/liferay/data:/opt/liferay/data'
+      - './volumes/liferay/deploy:/mnt/liferay/deploy'
+      - './volumes/liferay/files:/mnt/liferay/files'
+      - './volumes/liferay/scripts:/mnt/liferay/scripts'
     depends_on:
       postgres:
         condition: service_healthy
