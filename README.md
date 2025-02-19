@@ -12,6 +12,10 @@ Using HTTPS:
 ```bash
 git clone https://github.com/s0beran0/liferay-ce-7.4.3.ga67-docker-compose.git
 ```
+and
+```bash
+cd liferay-ce-7.4.3.ga67-docker-compose/
+```
 
 ### System Dependencies
 The dependencies required to run the project are:
@@ -20,6 +24,10 @@ The dependencies required to run the project are:
 
 ### Starting the environment
 To start the environment, run the following command in the terminal:
+```bash
+chmod +x setup.sh
+```
+and
 ```bash
 docker-compose up --build -d
 ```
